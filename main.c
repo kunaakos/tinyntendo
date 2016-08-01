@@ -16,6 +16,7 @@
 #include "usbdrv/oddebug.h"        /* debug macros */
 
 typedef union {
+  unsigned data:12;
   struct {
     uint8_t xAxis:2;
     uint8_t yAxis:2;
@@ -27,8 +28,7 @@ typedef union {
     uint8_t y:1;
     uint8_t l:1;
     uint8_t r:1;
-  } bits;
-  unsigned data:12;
+  };
 } reportBuffer_SNES;
 
 reportBuffer_SNES reportBuffer;
@@ -69,30 +69,96 @@ usbMsgLen_t usbFunctionSetup(uchar data[8]) {
   return 0; // Nothing implemented
 }
 
+/* BIT MANIPULATION THINGIES START */
+
+// clear bit
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
+// set bit
+#ifndef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
+
+/* BIT MANIPULATION THINGIES END */
+
+/* SNES STUFF START */
+
+#define CLOCK 2
+#define STROBE 1
+#define DATA 0
+
 static void initSNES( void )
 {
+  // CLOCK and STROBE pins are outputs on micro, set corresponding
+  // data direction registers to HIGH
+  sbi(DDRB, CLOCK);
+  sbi(DDRB, STROBE);
+  // DATA pin is an input on micro, set DDR bit LOW
+  cbi(DDRB, DATA);
 
+  // set CLOCK and STROBE to LOW, as they should be on the start
+  // of every controller read cycle
+  cbi(PORTB, CLOCK);
+  cbi(PORTB, STROBE);
+}
+
+static void strobeCLock(void) {
+  sbi(PORTB, CLOCK);
+  _delay_ms(1);
+  cbi(PORTB, CLOCK);
+  _delay_ms(1);
+}
+
+static void strobeLatch(void) {
+  sbi(PORTB, STROBE);
+  _delay_ms(1);
+  cbi(PORTB, STROBE);
+  _delay_ms(1);
+}
+
+static uint8_t readBit( void )
+{
+  uint8_t val;
+  // read DATA pin, remember: LOW means pressed
+  val = (~PINB & (1 << DATA));
+  strobeCLock();
+  return val;
 }
 
 static void readSNES( void )
 {
-	reportBuffer.bits.xAxis = 2;
-  reportBuffer.bits.yAxis = 0;
-  reportBuffer.bits.select = 0;
-  reportBuffer.bits.start = 0;
-  reportBuffer.bits.a = 0;
-  reportBuffer.bits.b = 0;
-  reportBuffer.bits.x = 1;
-  reportBuffer.bits.y = 1;
-  reportBuffer.bits.l = 1;
-  reportBuffer.bits.r = 1;
+  strobeLatch();
+
+  reportBuffer.b = readBit();
+  reportBuffer.y = readBit();
+  reportBuffer.select = readBit();
+  reportBuffer.start = readBit();
+
+  if (readBit()) {
+    reportBuffer.yAxis = 0;
+  }
+  if (readBit()) {
+    reportBuffer.yAxis = 2;
+  }
+  if (readBit()) {
+    reportBuffer.xAxis = 0;
+  }
+  if (readBit()) {
+    reportBuffer.xAxis = 2;
+  }
+
+  reportBuffer.a = readBit();
+  reportBuffer.x = readBit();
+  reportBuffer.l = readBit();
+  reportBuffer.r = readBit();
+
+  // should we read remaining 4 bits?
 }
 
-int main(void) {
+/* SNES STUFF END */
 
-  // // disable Watchdog Timer
-  // // WARNING: on some devices the status of the watchdog is PRESERVED OVER RESET
-  // wdt_disable(WDTO_1S);
+int main(void) {
 
   // enable Watchdog Timer
   wdt_enable(WDTO_1S);
