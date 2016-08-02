@@ -128,6 +128,8 @@ static uint8_t readBit( void )
 
 static void readSNES( void )
 {
+  reportBuffer.data = 0x05;
+
   strobeLatch();
 
   reportBuffer.b = readBit();
