@@ -12,8 +12,13 @@
 #include "usbdrv/usbdrv.h"
 // #include "usbdrv/oddebug.h"
 
-// controller module
+// controller modules
+#ifdef SNES
 #include "snes/snes.h"
+#endif
+#ifdef NES
+#include "nes/nes.h"
+#endif
 
 // USB reset hook, see usbconfig.h
 void hadUsbReset(void) {

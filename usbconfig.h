@@ -1,5 +1,10 @@
 // controller-specific configuration
+#ifdef SNES
 #include "snes/usbconfig-snes.h"
+#endif
+#ifdef NES
+#include "nes/usbconfig-nes.h"
+#endif
 
 /* Name: usbconfig.h
  * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers

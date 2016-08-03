@@ -1,12 +1,19 @@
 # tinyntendo
----
 
 ATtiny based Nintendo to USB adapter firmware to be used with Digispark boards (you can also make your own). See [Digispark product page](http://digistump.com/products/1) for schematics and other info, code for controller wiring.
 
-Currently works with SNES controllers only, project is set up for USBasp programmer, to compile and write just:
+Project is set up for USBasp programmer.
+
+To compile for NES and flash just:
 
 ```
-$ make clean && make install
+$ make clean && make nes && make install
+```
+
+Same for SNES:
+
+```
+$ make clean && make snes && make install
 ```
 
 ## todo
