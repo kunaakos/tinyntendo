@@ -2,7 +2,6 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
-
 #include <util/delay.h>
 
 // oscillator calibration routine
@@ -13,6 +12,7 @@
 #include "usbdrv/usbdrv.h"
 // #include "usbdrv/oddebug.h"
 
+// controller module
 #include "snes/snes.h"
 
 // USB reset hook, see usbconfig.h

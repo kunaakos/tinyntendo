@@ -1,7 +1,7 @@
 DEVICE     = attiny85           # it's what we're using
 CLOCK      = 16500000           # 16.5Mhz, no external crystal needed
 PROGRAMMER = -c usbasp -P usb   # using usbasp, modify if needed
-OBJECTS    = libs-device/osccal.o usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o  snes/snes.o main.o
+OBJECTS    = libs-device/osccal.o usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o snes/snes.o main.o
 
 # fuse settings:
 # use http://www.engbedded.com/fusecalc
