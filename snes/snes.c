@@ -40,7 +40,7 @@ static uint8_t readBit( void ) {
   return val;
 }
 
-void initSNES( void )
+void initController( void )
 {
   // CLOCK and STROBE pins are outputs on micro, set corresponding
   // data direction registers to HIGH
@@ -55,7 +55,7 @@ void initSNES( void )
   cbi(PORTB, STROBE);
 }
 
-void readSNES( void ) {
+void readController( void ) {
   reportBuffer.data = 0x05;
 
   strobeLatch();
