@@ -18,4 +18,4 @@ $ make clean && make snes && make install
 
 ## todo
 
-NES compatibility and eventually other controllers, too - although N64 and GC would require spme Digispark modding.
+Other controllers? N64 and GC would require some Digispark modding.
