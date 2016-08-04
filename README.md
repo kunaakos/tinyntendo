@@ -4,7 +4,7 @@ ATtiny based Nintendo to USB adapter firmware to be used with Digispark boards (
 
 **Project is set up for the [USBasp programmer](http://www.fischl.de/usbasp/).** Because it's cheap and brilliant, that's why.
 
-Let's assume you have [avrdude](http://www.nongnu.org/avrdude/) and [avr-gcc]() working on your machine.
+Let's assume you have [avrdude](http://www.nongnu.org/avrdude/) and [avr-gcc](http://www.nongnu.org/avr-libc/user-manual/overview.html) working on your machine.
 
 To compile for **NES** controllers:
 
